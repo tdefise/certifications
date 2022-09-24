@@ -1,0 +1,4 @@
+# Disable line length limitation(not suitable with CJK context)
+MD013: False
+
+MD041: False
