@@ -1,4 +1,4 @@
-## Fundamentals
+## 8. Read, generate, and modify configuration
 
 ### 8a) Demonstrate use of variables and outputs
 
@@ -59,6 +59,37 @@ Takes advantage of Terraform’s native support for reading environment variable
 - **TF_LOG_PATH**: Specifies where the log should persist its output to.
 
 ### 8c) Understand the use of collection and structural types
+
+#### Collection
+
+A *collection* type allows multiple values of *one* other type to be grouped together as a single value. The type of value *within* a collection is called its *element* type.
+
+The three kinds of collection type in the Terraform language are:
+
+- ``list(...)``: a sequence of values identified by consecutive whole numbers starting with zero.
+- ``map(...)``: a collection of values where each is identified by a string label.
+- ``set(...)``: a collection of unique values that do not have any secondary identifiers or ordering.
+
+#### Structural
+
+A *structural* type allows multiple values of *several distinct* types to be grouped together as a single value. Structural types require a *schema* as an argument, to specify which types are allowed for which elements.
+
+The two kinds of structural type in the Terraform language are:
+
+- ``object(...)``: a collection of named attributes that each have their own type.
+
+````hcl
+{
+  name = "John"
+  age  = 52
+}
+````
+
+- ``tuple(...)``: a sequence of elements identified by consecutive whole numbers starting with zero, where each element has its own type.
+
+````hcl
+["a", 15, true]
+````
 
 ### 8d) Create and differentiate resource and data configuration
 
