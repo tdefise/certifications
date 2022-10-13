@@ -10,8 +10,11 @@ The persistent data stored in the backend belongs to a **workspace**.
 
 Terraform starts with a single, **default** workspace named default that cannot be delete.
 
+Within your Terraform configuration, you may include the name of the current workspace using the ``${terraform.workspace}`` interpolation sequence.
+
 Terraform Cloud workspace variables let you:
--customize configurations, modify Terraform's behavior, and store information like provider credentials.
+
+- Customize configurations, modify Terraform's behavior, and store information like provider credentials.
 
 ### 9b) Differentiate OSS and Terraform Cloud workspaces
 
