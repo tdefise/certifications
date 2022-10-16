@@ -79,6 +79,56 @@ Terraform supports a variety of remote sources, including:
 
 ### 5b) Interact with module inputs and outputs
 
+#### Data Types
+
+The ``type`` argument in a ``variable`` block allows you to restrict the type of value that will be accepted as the value for a variable. If no type constraint is set then a value of any type is accepted.
+
+Type constraints are created from a mixture of type keywords and type constructors. The supported type keywords are:
+
+- string: A sequence of Unicode characters representing some text, like "hello".
+- number: A numeric value. The number type can represent both whole numbers like 15 and fractional values like 6.283185.
+- bool: A boolean value, either true or false. bool values can be used in conditional logic.
+
+
+
+The type constructors allow you to specify complex types such as collections:
+
+- list(<TYPE>): A sequence of values
+
+````hcl
+variable "users" {
+  type    = list
+  default = ["root", "user1", "user2"]
+}
+````
+
+- set(<TYPE>): A collection type that represents a set of unique values.
+
+````hcl
+variable "users_set" {
+  type = set(string)
+  default = (["root", "user1", "user2"])
+}
+````
+
+- map(<TYPE>): A set of key-value pairs with unique keys, the key type must be string, and the value type is arbitrary.
+
+````hcl
+variable "plans" {
+  type = map
+  default = {
+    small  = "1xCPU-1GB"
+    medium = "1xCPU-2GB"
+    large = "2xCPU-4GB"
+  }
+}
+````
+
+- object({<ATTR NAME> = <TYPE>, ... }): An object refers to a set of conforming types consisting of attributes with names and types
+- tuple([<TYPE>, ...]): A tuple is like a list and is a contiguous set of values, but each element has an independent type.
+
+#### Data 
+
 ##### Input Variables
 
 Input variables let customize aspects of Terraform modules **without altering the module's own source code**.
