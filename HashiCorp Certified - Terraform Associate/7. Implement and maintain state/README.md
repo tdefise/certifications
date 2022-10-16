@@ -139,6 +139,25 @@ The ``terraform refresh`` command reads the current settings from all managed re
 
 ### 7f) Describe backend block in configuration and best practices for partial configurations
 
+A backend defines where Terraform stores its state data files.
+
+Terraform uses persisted state data to keep track of the resources it manages. Most non-trivial Terraform configurations either integrate with Terraform Cloud or use a backend to store state remotely.
+
+In regards of credentials and sensitive data, Terraform recommends using environment variables to supply credentials and other sensitive data.
+
+#### Partial Configuration
+
+It is not required to have all required argument in the backend configuration.
+When some or all of the arguments are omitted, we call this a *partial configuration*.
+
+When using partial configuration, Terraform requires at a minimum that an empty backend configuration is specified in one of the root Terraform configuration files, to specify the backend type. For example:
+
+````hcl
+terraform {
+  backend "consul" {}
+}
+````
+
 ### 7g) Understand secret management in state files
 
 Terraform state can contain sensitive data, depending on the resources in use and your definition of "sensitive."
@@ -147,3 +166,7 @@ Terraform state can contain sensitive data, depending on the resources in use an
 - When using **remote state**, state is only ever held in memory when used by Terraform. It may be encrypted at rest, but this depends on the specific remote state backend.
 
 This means that storing state remotely **can provide better security**
+
+### Side Note: Unmanage a resource
+
+You can use ``terraform state rm`` in the less common situation where you wish to remove a binding to an existing remote object without first destroying it, which will effectively make Terraform "forget" the object while it continues to exist in the remote system.
