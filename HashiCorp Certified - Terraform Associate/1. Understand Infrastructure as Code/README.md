@@ -10,6 +10,8 @@ Infrastructure-as-Code help you to write scripts to:
 
 resources
 
+It can be seen as provisioning infrastructe through **software** tp achieve **consistent** and **predictable** deployments.
+
 #### Problems it address
 
 - Avoid configurations due to human errors
@@ -34,16 +36,6 @@ There are some cons:
 Within **Imperative**, we state **how** we want to get it.
 Imperative tends to use scripting languagues eg. Python, Ruby, JavaScript
 
-#### Infrastructure Lifecyle
-
-The lifecyle of a resource is the following, plan -> design -> build -> test -> deliver -> maintain -> retire
-
-Day 0-2 is a simplified way to describe phases of an infrastructure lifecycle:
-
-- Day 0: Plan and design
-- Day 1: Develop and iterate
-- Day 2: Go live and maitain
-
 #### Idempotent vs Non-Idempotent
 
 **Idempotence** is the property of certain operations in mathematics and computer science whereby they can be applied multiple times without changing the result beyond the initial application.
@@ -54,6 +46,20 @@ For example, if you are use an system that is idempotent:
 - When you ask again to deploy those two VMs, it will eventually deploy them again by either modifying or deleting and recreating them
 
 When using an non-idempotent method, you will end up with four VMs
+
+#### Infrastructure Lifecyle
+
+The lifecyle of a resource is the following, plan -> design -> build -> test -> deliver -> maintain -> retire
+
+Day 0-2 is a simplified way to describe phases of an infrastructure lifecycle:
+
+- Day 0: Plan and design
+- Day 1: Develop and iterate
+- Day 2: Go live and maitain
+
+#### Push vs Pull
+
+Terraform is a **push** type model, where the Terraform **pushes** what is asked.
 
 #### Provisionning vs Deploying vs Orchestrating
 
