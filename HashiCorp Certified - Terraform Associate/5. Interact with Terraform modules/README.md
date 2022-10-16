@@ -79,6 +79,89 @@ Terraform supports a variety of remote sources, including:
 
 ### 5b) Interact with module inputs and outputs
 
+##### Input Variables
+
+Input variables let customize aspects of Terraform modules **without altering the module's own source code**.
+This functionality allows you to share modules across different Terraform configurations, making your module composable and reusable.
+
+Each input variable accepted by a module must be declared using a variable block:
+
+````hcl
+variable "image_id" {
+  type = string
+}
+
+variable "availability_zone_names" {
+  type    = list(string)
+  default = ["us-west-1a"]
+}
+````
+
+#### Variable Definitions (.tfvars) Files
+
+To set lots of variables, it is more convenient to specify their values in a variable definitions file (with a filename ending in either ``.tfvars`` or ``.tfvars.json``) and then specify that file on the command line with ``-var-file``:
+
+````bash
+terraform apply -var-file="testing.tfvars"
+````
+
+Terraform also automatically loads a number of variable definitions files if they are present:
+
+- Files named exactly ``terraform.tfvars`` or ``terraform.tfvars.json``.
+- Any files with names ending in ``.auto.tfvars`` or ``.auto.tfvars.json``.
+
+
+##### Side Note: Sensitive 
+
+Setting a variable as ``sensitive`` prevents Terraform from showing its value in the plan or apply output, when you use that variable elsewhere in your configuration.
+
+Terraform will still record sensitive values in the state, and so anyone who can access the state data will have access to the **sensitive values in cleartext**.
+
+````hcl
+variable "user_information" {
+  type = object({
+    name    = string
+    address = string
+  })
+  sensitive = true
+}
+````
+
+##### Side Note: Command Line
+
+To specify individual variables on the command line, use the ``-var`` option when running the ``terraform plan`` and ``terraform apply`` commands:
+
+````bash
+terraform apply -var="image_id=ami-abc123"
+````
+
+#### Local Variables
+
+A local value assigns a name to an expression, so you can use the name multiple times within a module instead of repeating the expression.
+
+````hcl
+locals {
+  service_name = "forum"
+  owner        = "Community Team"
+}
+````
+
+Once a local value is declared, you can reference it in expressions as ``local.<NAME>.``
+
+*Note that Terraform recommends to use local values in moderation, such as in situations where a single value or result is used in many places and that value is likely to be changed in future.*
+
+#### Output Variables
+
+Output values make information about your infrastructure available on the command line, and can expose information for other Terraform configurations to use.
+
+Each output value exported by a module must be declared using an ``output`` block:
+
+````hcl
+output "instance_ip_addr" {
+  value = aws_instance.server.private_ip
+}
+````
+
 ### 5c) Describe variable scope within modules/child modules
 
 ### 5d) Discover modules from the public Terraform Module Registry
