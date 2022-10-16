@@ -2,6 +2,39 @@
 
 ### 3a) Handle Terraform and provider installation and versioning
 
+Providers allow Terraform to interact with cloud providers, SaaS providers, and other APIs.
+
+Provider configurations belong in the root module of a Terraform configuration.
+
+A provider configuration is created using a provider block:
+
+````hcl
+provider "google" {
+  project = "acme-app"
+  region  = "us-central1"
+}
+````
+
+There are also two "meta-arguments" that are defined by Terraform itself and available for all provider blocks:
+
+- ``alias``: Used when it is required to use provider with different configurations for different resources
+- ``version``: No longer recommended (use provider requirements instead)
+
+Each Terraform module must declare which providers it requires, so that Terraform can install and use them. Provider requirements are declared in a required_providers block.
+
+A provider requirement consists of a local name, a source location, and a version constraint:
+
+````hcl
+terraform {
+  required_providers {
+    mycloud = {
+      source  = "mycorp/mycloud"
+      version = "~> 1.0"
+    }
+  }
+}
+````
+
 ### 3b) Describe plug-in based architecture
 
 Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently.
@@ -23,7 +56,7 @@ The primary responsibilities of Provider Plugins are:
   - Authentication with the Infrastructure Provider
   - Define Resources that map to specific Services
 
-### 3c)
+### 3c) Demonstrate using multiple providers
 
 ### 3d) Describe how Terraform finds and fetches providers
 
@@ -152,6 +185,37 @@ resource "aws_instance" "web" {
   provisioner "file" {
     source      = "apps/app1/"
     destination = "D:/IIS/webapp1"
+  }
+}
+````
+
+#### Provisioner Connection Settings
+
+Most provisioners require access to the remote resource via SSH or WinRM and expect a nested ``connection`` block with details about how to connect.
+
+````hcl
+provisioner "file" {
+  source      = "conf/myapp.conf"
+  destination = "/etc/myapp.conf"
+
+  connection {
+    type     = "ssh"
+    user     = "root"
+    password = "${var.root_password}"
+    host     = "${var.host}"
+  }
+}
+
+# Copies the file as the Administrator user using WinRM
+provisioner "file" {
+  source      = "conf/myapp.conf"
+  destination = "C:/App/myapp.conf"
+
+  connection {
+    type     = "winrm"
+    user     = "Administrator"
+    password = "${var.admin_password}"
+    host     = "${var.host}"
   }
 }
 ````
