@@ -1,5 +1,14 @@
 ## Understand Terraform basics
 
+### Introduction
+
+Terraform core is made of:
+
+- **Executable**: Invoke to run Terraform
+- **Configuration Files**: Contain the infrastructure that is going to be deployed
+- **Provider Pluging**: Executable used by Terraform in order to interact with a service's API
+- **State Data**: Contains the current information about the deployment
+
 ### 3a) Handle Terraform and provider installation and versioning
 
 Providers allow Terraform to interact with cloud providers, SaaS providers, and other APIs.
