@@ -4,6 +4,18 @@
 
 The ``terraform fmt`` command is used to rewrite Terraform configuration files to a canonical format and style.
 
+#### Syntax
+
+- Indent two spaces for each nesting level.
+- When multiple arguments with single-line values appear on consecutive lines at the same nesting level, align their equals signs:
+
+````hcl
+ami           = "abc123"
+instance_type = "t2.micro"
+````
+
+- Use empty lines to separate logical groups of arguments within a block.
+
 ### 4b)  Given a scenario: choose when to use terraform taint to taint Terraform resources
 
 The ``terraform taint`` command informs Terraform that a particular object has become degraded or damaged.
@@ -38,8 +50,24 @@ Then, run ``terraform import`` in order to attach an existing instance to this r
 
 > terraform import aws_instance.example i-abcd1234
 
-### 4d)
+### 4d) Given a scenario: choose when to use terraform workspace to create workspaces
 
-### 4e)
+### 4e) Given a scenario: choose when to use terraform state to view Terraform state
 
-### 4f)
+The ``terraform state`` command is used for advanced state management.
+
+Usage:
+
+- The ``terraform state list`` command is used to list resources within a Terraform state.
+
+### 4f) Given a scenario: choose when to enable verbose logging and what the outcome/value is
+
+Terraform has detailed logs that you can enable by setting the ``TF_LOG`` environment variable to any value.
+
+You can set TF_LOG to one of the log levels:
+
+- TRACE
+- DEBUG
+- INFO
+- WARN
+- ERROR
