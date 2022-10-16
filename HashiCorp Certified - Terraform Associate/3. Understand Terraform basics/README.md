@@ -9,6 +9,14 @@ Terraform core is made of:
 - **Provider Pluging**: Executable used by Terraform in order to interact with a service's API
 - **State Data**: Contains the current information about the deployment
 
+Also it is important to understand the object types. Here are the main ones:
+
+- **Providers** - ``provider``: Allow Terraform to interact with cloud providers, SaaS providers, and other APIs.
+- **Resources** - ``resource``: Things that you want to provision in a target environment. Each resource is associated with a provider. 
+- **Data Sources** - ``data``: Used to query information from a provider.
+
+It is a best practises to segregate the different types of resource in a terraform file.
+
 ### 3a) Handle Terraform and provider installation and versioning
 
 Providers allow Terraform to interact with cloud providers, SaaS providers, and other APIs.
