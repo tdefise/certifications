@@ -26,6 +26,7 @@ This plan has the potential to be different than the one reviewed on the pull re
 ### 6b) Initialize a Terraform working directory
 
 The ``terraform init`` command initializes a working directory containing Terraform configuration files.
+``terraform init`` searches if there is any provider plugins required, and if they are, they will download them.
 
 This is the **first** command that should be run after writing a new Terraform configuration or cloning an existing one from version control.
 
@@ -36,6 +37,12 @@ Terraform automatically creates or updates the dependency lock file each time yo
 A dependency lock file (**.terraform.lock.hcl**) is used to determine which versions of those dependencies are potentially compatible with the current configuration and which versions are currently selected for use.
 
 It is recommended to have this file in the version control repository in order to discuss potential changes to with external dependencies through code review
+
+``terraform init`` will aslo create a state file into the back end
+
+When running ``terraform init``, the expected output is:
+
+**Terraform has been successfully initialized!**
 
 ### 6c) Validate a Terraform configuration
 
@@ -55,6 +62,19 @@ The ``terraform plan`` command creates an execution plan, which lets you preview
 
 The plan command alone **does not actually carry out the proposed changes**.
 This command is used to check whether the proposed changes match what is expected before applying the changes or share the changes.
+
+An example is ``terraform plan -out plan.tfplan``
+
+### 6e) Execute changes to infrastructure with Terraform
+
+The ``terraform apply`` command executes the actions proposed in a Terraform plan.
+
+When a saved plan file is passed to terraform apply, Terraform takes the actions in the saved plan without prompting for a confirmation.
+
+Note that Terraform has two alternative planning modes, each of which creates a plan with a different intended outcome.
+
+- **Destroy mode** - ``-destroy``: Creates a plan whose goal is to destroy all remote objects that currently exist, leaving an empty Terraform state. 
+- **Refresh-only mode** - ``-refresh-only``: Creates a plan whose goal is only to update the Terraform state and any root module output values to match changes made to remote objects outside of Terraform.
 
 ### 6f) Destroy Terraform managed infrastructure
 
