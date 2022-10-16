@@ -22,6 +22,25 @@ terraform {
 }
 ````
 
+#### State file
+
+The state file is a JSON file as showed below:
+
+````json
+{
+  "version": 4,
+  "terraform_verion": "1.0.8",
+  "serial": 30,
+  "lineage": "",
+  ...
+}
+````
+
+- version: represent the vurrent version of the state data format
+- terraform_version: version of Terraform that was last used on the data
+- serial: incremental each time the state data is changed
+- lineage: unique id for the state data
+
 ### 7a) Describe default local backend
 
 A backend defines where Terraform stores its state data files.
