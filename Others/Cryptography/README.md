@@ -1,4 +1,4 @@
-Public Key
+# Cryptography
 
 
 ### SSL/TLS
@@ -128,7 +128,7 @@ PFS is achieved by using temporary, **ephemeral keys** that are generated for ea
 - The number of rounds indicates how many iterations of specific operations the algorithm performs to achieve its encryption or decryption process.
 
 |Name||Block Size|Key Length|Rounds|
-|-|-|-|-|-|-|-|
+|-|-|-|-|
 |Triple-DES|64 bits|168 bits|48 rounds|
 |RC4|*Not applicable (stream cipher)*|40 to 2048 bits|*Not applicable (stream cipher)*|
 |Blowfish|64 bits|32 bits to 448 bits|16|
@@ -175,7 +175,6 @@ A stream cipher is a type of encryption algorithm that operates on individual bi
 - Fast and secure, suitable for high-performance applications.
 - Well-suited for devices with limited computational resources.
 - May have slightly different security assumptions compared to traditional block ciphers.
-
 
 #### AES
 
@@ -239,8 +238,6 @@ CCM si vulnerable to *nonce reuse* (if the same nonce is reused with the same ke
 - GCM is less sensitive to nonce reuse due to its construction and the use of the Galois field multiplication.
 - GCM generally requires a larger nonce length compared to CCM to maintain security due to its potential vulnerability to birthday attacks.
 
-#### Key Lengths
-
 #### Authenticated Encryption with Associated Data *(AEAD)*
 
 Refers to a cryptographic construction that combines both encryption and authentication in a single operation, providing a comprehensive security solution for protecting data confidentiality, integrity, and authenticity.
@@ -260,8 +257,7 @@ Some well-known AEAD modes of operation include:
 - Counter with CBC-MAC (CCM)
 - AES-CCM
 
-
-# AES 128 CCM vs AES 128 CCM 8
+##### AES 128 CCM vs AES 128 CCM 8
 
 - CCM 8 mode sacrifices some security margin to achieve a shorter authentication tag, making it more suitable for environments where shorter tags are preferred due to bandwidth or computational constraints.
 - While CCM 8 reduces the security margin, it is still considered secure for most practical applications.
@@ -277,8 +273,6 @@ CCM 8 is often used in scenarios where the available bandwidth or computational 
 |SHA256|Secure Hash Algorithm 256|Recommended|
 |SHA384|Secure Hash Algorithm 384|Recommended|
 
-
-#### 
 
 ### Trusted Platform Module (TPM)
 
@@ -328,11 +322,11 @@ enabling client authentication, and the CA creates and signs a certificate using
 
 The following EKUs allows authentication:
 
-- Client Authentication 1.3.6.1.5.5.7.3.2
-- PKINIT Client Authentication* 1.3.6.1.5.2.3.4
-- Smart Card Logon 1.3.6.1.4.1.311.20.2.2
-- Any Purpose 2.5.29.37.0
-- SubCA (no EKUs)
+- *Client Authentication* 1.3.6.1.5.5.7.3.2
+- *PKINIT Client Authentication* 1.3.6.1.5.2.3.4
+- *Smart Card Logon* 1.3.6.1.4.1.311.20.2.2
+- *Any Purpose* 2.5.29.37.0
+- *SubCA (no EKUs)*
 
 The "Certificate Request Agent" Enhanced Key Usage (EKU) is a specific purpose that can be assigned to a digital certificate.
 
@@ -457,7 +451,7 @@ FIPS 140-2 defines four levels of security, simply named "Level 1" to "Level 4".
 |Level 1|Basic Security Requirements|Physical security of the module is not required. Focus is on the proper implementation of cryptographic algorithms and logical security.|
 |Level 2|Tamper-Evident|Security	Modules at this level provide some physical security mechanisms to **detect unauthorized access**.
 |Level 3|Tamper-Resistant Security|In addition to Level 2 requirements, modules at this level provide **active physical security mechanisms to prevent unauthorized access** and **erase sensitive data upon tampering**.|
-|Level 4|Tamper-Responsive Security	Modules at this level include all Level 3 requirements and introduce active defenses against physical attacks, such as **self-destruct mechanisms**.|
+|Level 4|Tamper-Responsive| Security Modules at this level include all Level 3 requirements and introduce active defenses against physical attacks, such as **self-destruct mechanisms**.|
 
 In summary, FIPS 140-2 Level 3 and Level 4 both focus on physical security and tamper resistance, with Level 4 introducing more advanced mechanisms to actively respond to tampering attempts.
 
@@ -561,7 +555,7 @@ AD CS defines CA certificates the AD forest trusts in four locations under the c
 
 To obtain a certificate from AD CS, clients go through a process called enrollment.
 
-![]()
+![Certificate Enrollment](CertificateEnrollment.png)
 
 ### Certificate Templates
 
@@ -651,3 +645,10 @@ Certificate-based authentication within Active Directory refers to a method of a
 ### Elliptic Curve 
 
 @to do
+
+### Resources
+
+- https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf
+- https://ciphersuite.info/
+- https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation
+- https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
