@@ -1,5 +1,88 @@
 # Cryptography
 
+### Digital Certificate
+
+A digital certificate, also known simply as a certificate, is a digital document that serves as a means of **identity verification** in the context of a Public Key Infrastructure (PKI).
+
+Key elements includes:
+
+- **Certificate Holder (Subject)**: The subject of a digital certificate is the entity (person, organization, server, device, etc.) to which the certificate is issued.
+- **Public Key**: This key is mathematically related to the subject's private key and is used for encryption, digital signatures, and other cryptographic operations.
+- **Issuer (Certificate Authority)**: The issuer of a digital certificate is the Certificate Authority (CA) that verifies the identity of the subject and issues the certificate. 
+- **Digital Signature**: The issuer's digital signature is a cryptographic hash value generated using the issuer's private key. This signature ensures the integrity of the certificate's content. 
+- **Certificate Serial Number**: Each certificate is assigned a unique serial number by the issuing CA. 
+- **Validity Period**: A digital certificate is valid for a specified period of time.
+- **Certificate Chains and Trust**: Digital certificates are often organized in a hierarchy, with a Root CA at the top issuing certificates to Intermediate CAs, which in turn issue certificates to end entities (subjects). 
+- **SubjectAlternativeName**
+- **Basic Constraints**
+- **Extended Key Usages (EKUs)**: Object identifiers (OIDs) that describe how the certificate
+will be used.:
+  - *Code Signing*: The certificate is for signing executable code
+  - *Encrypting File System*: The certificate is for encrypting file systems
+  - *Secure Email*: The certificate is for encrypting email
+  - *Client Authentication*: The certificate is for authentication to another server (e.g., to AD)
+  - *Smart Card Logon*: The certificate is for use in smart card authentication.
+  - *Server Authentication*: The certificate is for identifying servers
+- **Certificate Attributes**: A digital certificate contains various attributes that provide additional information about the certificate, such as its intended usage (e.g., encryption, digital signatures)
+
+#### Public/Private key pair
+
+private key and associated public key are mathematically related to one another. The public key can be shared widely. The private key proves ownership of the identity and must be kept secret.
+
+##### Private Keys
+
+##### Public Keys
+
+#### Subject Alternative Names
+
+A Subject Alternative Name (SAN) is an extension within a certificate that allows the certificate holder to specify additional domain names, IP addresses, or other identifiers for which the certificate should be considered valid.
+In other words, a single TLS certificate with multiple SAN entries can secure multiple domain names or IP addresses, allowing them to be used in the same SSL/TLS session without the need for separate certificates.
+
+However, it is important to know that by default, during certificate-based authentication, one way AD maps certificates to user accounts based on a UPN specified in the SAN
+This means that if an attacker can specify an arbitrary SAN when requesting a certificate that has an EKU
+enabling client authentication, and the CA creates and signs a certificate using the attackersupplied SAN, **the attacker can become any user in the domain**
+
+#### Risky EKUs
+
+The following EKUs allows authentication:
+
+- *Client Authentication* 1.3.6.1.5.5.7.3.2
+- *PKINIT Client Authentication* 1.3.6.1.5.2.3.4
+- *Smart Card Logon* 1.3.6.1.4.1.311.20.2.2
+- *Any Purpose* 2.5.29.37.0
+- *SubCA (no EKUs)*
+
+The "Certificate Request Agent" Enhanced Key Usage (EKU) is a specific purpose that can be assigned to a digital certificate.
+
+Here are the risks of this EKU:
+
+- **Privilege Escalation**: If not properly controlled, a certificate with the "Certificate Request Agent" EKU might be used to escalate privileges, as it allows the certificate holder to request certificates that might grant access or permissions beyond what is intended (ESC3)
+
+The "Enrollable Any Purpose" Enhanced Key Usage (EKU) is a special extension that can be included in a digital certificate to indicate that the certificate can be used for any purpose for which a certificate is typically used.
+
+##### Side Note: PKINIT
+
+PKINIT is a preauthentication mechanism for Kerberos 5 which uses X.509 certificates to authenticate the KDC to clients and vice versa.
+
+#### Validation levels
+
+##### Domain Validation *(DV)*
+
+Domain Validation certificates are the **most basic** type of SSL certificates. The validation process involves verifying that the entity requesting the certificate **has control over the domain** for which the certificate is being issued.
+
+##### Organization Validation *(OV)*
+
+In addition to verifying domain control, the CA also validates the identity and existence of the organization requesting the certificate. The verification process includes checks against official government records and business directories to confirm the organization's legitimacy.
+
+##### Extended Validation *(OV)*
+
+EV certificates can be issued only by a subset of certificate authorities (CAs) and require verification of the requesting **entity's legal identity** before certificate issuance.
+
+#### Certificate Revocation List *(CRL)*
+
+A list of revoked public key certificates created and digitally signed by a Certification Authority
+
+*Note that this list doesn’t include expired certificates.*
 
 ### SSL/TLS
 
@@ -127,7 +210,7 @@ PFS is achieved by using temporary, **ephemeral keys** that are generated for ea
 - The key length determines the length of the cryptographic key used for encryption and decryption.
 - The number of rounds indicates how many iterations of specific operations the algorithm performs to achieve its encryption or decryption process.
 
-|Name||Block Size|Key Length|Rounds|
+|Name|Block Size|Key Length|Rounds|
 |-|-|-|-|
 |Triple-DES|64 bits|168 bits|48 rounds|
 |RC4|*Not applicable (stream cipher)*|40 to 2048 bits|*Not applicable (stream cipher)*|
@@ -135,7 +218,6 @@ PFS is achieved by using temporary, **ephemeral keys** that are generated for ea
 |Twofish|128 bits|128, 192, or 256 bits|- 16 rounds for 128-bit keys<br>- 16 rounds for 192-bit keys<br>- 20 rounds for 256-bit keys<br>|
 |ChaCha20|512 bits|128 or 256 bits|20 rounds (for the 256-bit key version)|
 |AES|128 bits|128, 192, or 256 bits|- 10 rounds for 128-bit keys<br>- 12 rounds for 192-bit keys<br>- 14 rounds for 256-bit keys<br>
-
 
 #### Triple-DES *(3DES)*
 
@@ -189,7 +271,7 @@ The "Counter" is a fundamental component used in various modes of operation for 
 - Random read access means that the ciphertext blocks can be decrypted in any order without needing to process previous blocks first.
  
 |Mode|Encryption parallelizable|Decryption parallelizable|Random read access|
-|-|-|-|
+|-|-|-|-|
 |CBC|No|Yes|Yes|
 |CTR|Yes|Yes|Yes|
 |GCM|Yes|Yes|Yes|
@@ -284,83 +366,6 @@ TPMs can assist in protecting passwords and credentials by securely storing them
 
 TPMs can provide attestation capabilities, allowing the platform to prove its identity and configuration to external entities.
 
-### Digital Certificate
-
-A digital certificate, also known simply as a certificate, is a digital document that serves as a means of **identity verification** in the context of a Public Key Infrastructure (PKI).
-
-Key elements includes:
-
-- **Certificate Holder (Subject)**: The subject of a digital certificate is the entity (person, organization, server, device, etc.) to which the certificate is issued.
-- **Public Key**: This key is mathematically related to the subject's private key and is used for encryption, digital signatures, and other cryptographic operations.
-- **Issuer (Certificate Authority)**: The issuer of a digital certificate is the Certificate Authority (CA) that verifies the identity of the subject and issues the certificate. 
-- **Digital Signature**: The issuer's digital signature is a cryptographic hash value generated using the issuer's private key. This signature ensures the integrity of the certificate's content. 
-- **Certificate Serial Number**: Each certificate is assigned a unique serial number by the issuing CA. 
-- **Validity Period**: A digital certificate is valid for a specified period of time.
-- **Certificate Chains and Trust**: Digital certificates are often organized in a hierarchy, with a Root CA at the top issuing certificates to Intermediate CAs, which in turn issue certificates to end entities (subjects). 
-- **SubjectAlternativeName**
-- **Basic Constraints**
-- **Extended Key Usages (EKUs)**: Object identifiers (OIDs) that describe how the certificate
-will be used.:
-  - *Code Signing*: The certificate is for signing executable code
-  - *Encrypting File System*: The certificate is for encrypting file systems
-  - *Secure Email*: The certificate is for encrypting email
-  - *Client Authentication*: The certificate is for authentication to another server (e.g., to AD)
-  - *Smart Card Logon*: The certificate is for use in smart card authentication.
-  - *Server Authentication*: The certificate is for identifying servers
-- **Certificate Attributes**: A digital certificate contains various attributes that provide additional information about the certificate, such as its intended usage (e.g., encryption, digital signatures)
-
-#### Subject Alternative Names
-
-A Subject Alternative Name (SAN) is an extension within a certificate that allows the certificate holder to specify additional domain names, IP addresses, or other identifiers for which the certificate should be considered valid.
-In other words, a single TLS certificate with multiple SAN entries can secure multiple domain names or IP addresses, allowing them to be used in the same SSL/TLS session without the need for separate certificates.
-
-However, it is important to know that by default, during certificate-based authentication, one way AD maps certificates to user accounts based on a UPN specified in the SAN
-This means that if an attacker can specify an arbitrary SAN when requesting a certificate that has an EKU
-enabling client authentication, and the CA creates and signs a certificate using the attackersupplied SAN, **the attacker can become any user in the domain**
-
-#### Risky EKUs
-
-The following EKUs allows authentication:
-
-- *Client Authentication* 1.3.6.1.5.5.7.3.2
-- *PKINIT Client Authentication* 1.3.6.1.5.2.3.4
-- *Smart Card Logon* 1.3.6.1.4.1.311.20.2.2
-- *Any Purpose* 2.5.29.37.0
-- *SubCA (no EKUs)*
-
-The "Certificate Request Agent" Enhanced Key Usage (EKU) is a specific purpose that can be assigned to a digital certificate.
-
-Here are the risks of this EKU:
-
-- **Privilege Escalation**: If not properly controlled, a certificate with the "Certificate Request Agent" EKU might be used to escalate privileges, as it allows the certificate holder to request certificates that might grant access or permissions beyond what is intended (ESC3)
-
-The "Enrollable Any Purpose" Enhanced Key Usage (EKU) is a special extension that can be included in a digital certificate to indicate that the certificate can be used for any purpose for which a certificate is typically used.
-
-ESC2
-
-##### Side Note: PKINIT
-
-PKINIT is a preauthentication mechanism for Kerberos 5 which uses X.509 certificates to authenticate the KDC to clients and vice versa.
-
-#### Validation levels
-
-##### Domain Validation *(DV)*
-
-Domain Validation certificates are the **most basic** type of SSL certificates. The validation process involves verifying that the entity requesting the certificate **has control over the domain** for which the certificate is being issued.
-
-##### Organization Validation *(OV)*
-
-In addition to verifying domain control, the CA also validates the identity and existence of the organization requesting the certificate. The verification process includes checks against official government records and business directories to confirm the organization's legitimacy.
-
-##### Extended Validation *(OV)*
-
-EV certificates can be issued only by a subset of certificate authorities (CAs) and require verification of the requesting **entity's legal identity** before certificate issuance.
-
-#### Certificate Revocation List *(CRL)*
-
-A list of revoked public key certificates created and digitally signed by a Certification Authority
-
-*Note that this list doesn’t include expired certificates.*
 
 ### Certificate Authority *(CA)*
 
@@ -434,7 +439,7 @@ A hardware security module (HSM) is a physical computing device that safeguards 
 
 HSMs can provide significant CPU offload for asymmetric key operations
 
-#### Key concepts
+#### Key features
 
 - HSMs enable to store keys within FIPS 140-2 compliant assets
 - HSMs include a reliable random number generator that produces unpredictable values used as cryptographic keys or initialization vectors.
@@ -622,6 +627,19 @@ To deploy an OCSP Responder in your PKI environment, you need to:
 3. **Configure OCSP URLs**: Specify the OCSP responder URLs clients will use to request OCSP responses.
 4. **Start OCSP Responder Service**: Start the OCSP responder service to listen for incoming OCSP requests.
 
+### Trust Store
+
+Trust in an end entity certificate is achieved by checking the certification path though a number CAs, back to a trusted certificate, installed in a **trust store**.
+
+The trust store is a collection of certificates that are trusted, they are often part an operating system and are installed locally on an end entity.
+
+The trust store in a Microsoft Certificate Services environment typically consists of two main components:
+
+- **Root Certificate Store**: This store contains the root certificates of trusted Certificate Authorities (CAs). These are the highest level certificates in the certificate hierarchy and are used to sign other certificates. The root certificates establish a chain of trust that allows certificates issued by these CAs to be trusted.
+
+- **Intermediate Certificate Store**: Some Certificate Authorities do not directly sign end-entity (such as server or client) certificates with their root certificates. Instead, they use intermediate certificates, which are signed by the root certificate. These intermediate certificates are placed in the intermediate certificate store. End-entity certificates issued by these intermediates can then be verified by chaining up to the root certificate.
+
+
 ### Microsoft’s Cryptographic Service Providers (CSP).
 
 Microsoft's Cryptographic Service Providers (CSP) is a framework and architecture used in Windows operating systems to provide cryptographic services and functionality to applications and processes
@@ -648,6 +666,7 @@ Certificate-based authentication within Active Directory refers to a method of a
 
 ### Resources
 
+- https://www.ncsc.gov.uk/collection/in-house-public-key-infrastructure/introduction-to-public-key-infrastructure/components-of-a-pki
 - https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf
 - https://ciphersuite.info/
 - https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation
